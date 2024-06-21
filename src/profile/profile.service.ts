@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class QRService {
+export class ProfileService {
   constructor() {}
 }
