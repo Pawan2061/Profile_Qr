@@ -9,8 +9,9 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ProfileService } from './profile.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateProfileDto } from './dto/add-profile.dto';
+import { imageFileFilter } from 'src/utils/fileImageFIlter';
 
-@Controller()
+@Controller('profile')
 export class ProfileController {
   constructor(
     private prisma: PrismaService,
@@ -18,7 +19,11 @@ export class ProfileController {
   ) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      fileFilter: imageFileFilter,
+    }),
+  )
   createProfile(
     @Body() dto: CreateProfileDto,
     @UploadedFiles() file: Express.Multer.File,
