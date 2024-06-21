@@ -7,6 +7,7 @@ export class ProfileService {
   constructor(private prisma: PrismaService) {}
   async createProfile(dto: CreateProfileDto, file: any) {
     console.log(dto);
+    console.log(file);
 
     return await this.prisma.user.create({
       data: {

@@ -1,6 +1,9 @@
 import {
   Body,
   Controller,
+  FileTypeValidator,
+  MaxFileSizeValidator,
+  ParseFilePipe,
   Post,
   UploadedFiles,
   UseInterceptors,
@@ -9,7 +12,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ProfileService } from './profile.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateProfileDto } from './dto/add-profile.dto';
-import { imageFileFilter } from 'src/utils/fileImageFIlter';
+import { diskStorage } from 'multer';
 
 @Controller('profile')
 export class ProfileController {
@@ -21,13 +24,28 @@ export class ProfileController {
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
-      fileFilter: imageFileFilter,
+      storage: diskStorage({
+        destination: './files',
+      }),
     }),
   )
   createProfile(
     @Body() dto: CreateProfileDto,
-    @UploadedFiles() file: Express.Multer.File,
+    @UploadedFiles(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 2000 }),
+          new FileTypeValidator({ fileType: '.(png|jpeg|jpq)' }),
+        ],
+        fileIsRequired: false,
+      }),
+    )
+    file: Express.Multer.File,
   ) {
+    console.log('done');
+
+    console.log(file);
+
     return this.profileService.createProfile(dto, file);
   }
 }
