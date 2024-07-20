@@ -11,7 +11,6 @@ export class ProfileService {
 
     return await this.prisma.user.create({
       data: {
-        id: dto.id,
         email: dto.email,
         name: dto.name,
         profileImage: file,
