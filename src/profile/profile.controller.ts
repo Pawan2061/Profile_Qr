@@ -20,6 +20,8 @@ export class ProfileController {
       storage: diskStorage({
         destination: './files',
         filename(req, file, callback) {
+          // callback(null,file.filename),
+
           const uniqueSuffix =
             Date.now() + '-' + Math.round(Math.random() * 100);
           const filename = `${uniqueSuffix}-${file.originalname}`;
